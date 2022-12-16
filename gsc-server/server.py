@@ -47,11 +47,11 @@ def getResult(url, startDate, endDate):
     return result
 
 
-@app.route("/gsc", methods=['POST'])
+@app.route("/gsc/get-report-search-console", methods=['POST'])
 def getGscData():
-    startDate = request.form['startDate']
-    endDate = request.form['endDate']
-    url1 = request.form['url']
+    startDate = request.json['startDate']
+    endDate = request.json['endDate']
+    url1 = request.json["url"]
     url2 = handleUrl(url1)
     result1 = getResult(url1, startDate, endDate)
     result2 = getResult(url2, startDate, endDate)
