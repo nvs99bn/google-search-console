@@ -1,6 +1,8 @@
 import { useState } from "react";
-import TimeFilter from "./time-filter.js";
-import EnhancedTable from "./Table.js";
+import axios from "axios";
+import TimeFilter from "./timeFilter.js";
+import CsvDownload from "./\bcsvDownload.js";
+import EnhancedTable from "./table.js";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -49,31 +51,29 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   let endTime = new Date();
   endTime.setDate(endTime.getDate() - 2);
-  endTime = endTime.toLocaleDateString("en-CA");
   let startTime = new Date();
   startTime.setDate(startTime.getDate() - 8);
-  startTime = startTime.toLocaleDateString("en-CA");
+  startTime.setSeconds(startTime.getSeconds() - 1);
   const [startDate, setStartDate] = useState(startTime);
   const [endDate, setEndDate] = useState(endTime);
 
   const postData = () => {
     setIsLoading(true);
-    const formData = new FormData();
-    formData.append("url", value);
-    formData.append("startDate", startDate);
-    formData.append("endDate", endDate);
-    fetch("http://localhost:8000/gsc", {
-      method: "POST",
-      body: formData,
-      // mode: "no-cors",
-    })
+    axios
+      .post(
+        (process.env.REACT_APP_ENDPOINT ??
+          "https://dashboard-api2.abc-elearning.org/") +
+          "gsc/get-report-search-console",
+        {
+          url: value,
+          startDate: startDate.toLocaleDateString("en-CA"),
+          endDate: endDate.toLocaleDateString("en-CA"),
+        }
+      )
       .then((response) => {
-        response.json();
-        console.log(response.json());
+        // console.log(response);
+        setData(response.data);
         setIsLoading(false);
-      })
-      .then((data) => {
-        setData(data);
       })
       .catch((error) => {
         console.log(error);
@@ -98,12 +98,15 @@ const App = () => {
         handleChange={handleChange}
         value={value}
       />
-      <TimeFilter
-        startDate={startDate}
-        endDate={endDate}
-        setStartDate={setStartDate}
-        setEndDate={setEndDate}
-      />
+      <Box sx={{ display: "inline-flex", alignItems:"center", justifyContent:"space-between"}}>
+        <TimeFilter
+          startDate={startDate}
+          endDate={endDate}
+          setStartDate={setStartDate}
+          setEndDate={setEndDate}
+        />
+        <CsvDownload data={data} />
+      </Box>
       {isLoading ? <LoadingSpinner /> : <EnhancedTable data={data} />}
     </div>
   );

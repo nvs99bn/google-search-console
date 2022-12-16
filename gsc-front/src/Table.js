@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
+import TablePagination from "@mui/material/TablePagination";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
@@ -39,12 +40,6 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  {
-    id: "id",
-    numeric: false,
-    disablePadding: true,
-    label: "#",
-  },
   {
     id: "keys",
     numeric: false,
@@ -115,12 +110,24 @@ function EnhancedTableHead(props) {
 export default function EnhancedTable({ data }) {
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState();
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   if (data) {
     return (
       <Box sx={{ width: "100%" }}>
@@ -129,7 +136,7 @@ export default function EnhancedTable({ data }) {
             <Table
               sx={{ minWidth: 750 }}
               aria-labelledby="tableTitle"
-              size={"small"}
+              size={"medium"}
             >
               <EnhancedTableHead
                 order={order}
@@ -137,29 +144,39 @@ export default function EnhancedTable({ data }) {
                 onRequestSort={handleRequestSort}
               />
               <TableBody>
-                {stableSort(data, getComparator(order, orderBy)).map(
-                  (item, i) => {
+                {stableSort(data, getComparator(order, orderBy))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, i) => {
                     return (
                       <TableRow key={i}>
-                        <TableCell align="left">{i + 1}</TableCell>
                         <TableCell align="left">{item["keys"][0]}</TableCell>
-                        <TableCell align="right">{item["clicks"]}</TableCell>
-                        <TableCell align="right">
+                        <TableCell align="right" sx={{ color: "#1976d2" }}>
+                          {item["clicks"]}
+                        </TableCell>
+                        <TableCell align="right" sx={{ color: "#7b1fa2" }}>
                           {item["impressions"]}
                         </TableCell>
-                        <TableCell align="right">
-                          {(item["ctr"] * 100).toFixed(2)}%
+                        <TableCell align="right" sx={{ color: "#00796b" }}>
+                          {(item["ctr"] * 100).toFixed(1)}%
                         </TableCell>
-                        <TableCell align="right">
+                        <TableCell align="right" sx={{ color: "#d56e0c" }}>
                           {item["position"].toFixed(1)}
                         </TableCell>
                       </TableRow>
                     );
-                  }
-                )}
+                  })}
               </TableBody>
             </Table>
           </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25, 50, 100, 250, 500]}
+            component="div"
+            count={data.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
         </Paper>
       </Box>
     );
