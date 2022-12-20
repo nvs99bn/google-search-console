@@ -2,6 +2,9 @@ from googleapiclient.discovery import build
 from oauth2client.service_account import ServiceAccountCredentials
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from bs4 import BeautifulSoup
+import re
+import requests
 
 SCOPES = ['https://www.googleapis.com/auth/webmasters.readonly']
 API_SERVICE_NAME = 'searchconsole' 
@@ -20,8 +23,8 @@ def getResult(url, startDate, endDate):
     if "worksheetzone.org" in url:
         site_url = "sc-domain:worksheetzone.org"
         cred = ServiceAccountCredentials.from_json_keyfile_name(
-        "./micro-enigma-235001-445793a37c7f.json",
-        scopes=SCOPES) 
+            "./micro-enigma-235001-445793a37c7f.json",
+            scopes=SCOPES) 
 
     else:
         if url.find("/", 8) > -1:
@@ -62,6 +65,13 @@ def getGscData():
         rows = result2["rows"]
     else:
         rows = []
+    html_text = requests.get(url1).text
+    soup = BeautifulSoup(html_text, 'html.parser')
+    text_content = soup.get_text().lower()
+    for row in rows:
+        key = row["keys"][0]
+        number_show = len(re.findall(key, text_content))
+        row["numberShow"] = number_show
     return jsonify(rows), 200
 
 if __name__ == "__main__":

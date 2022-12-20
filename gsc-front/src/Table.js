@@ -47,6 +47,12 @@ const headCells = [
     label: "Keywords",
   },
   {
+    id: "mentions",
+    numeric: true,
+    disablePadding: false,
+    label: "Mentions",
+  },
+  {
     id: "clicks",
     numeric: true,
     disablePadding: false,
@@ -150,6 +156,9 @@ export default function EnhancedTable({ data }) {
                     return (
                       <TableRow key={i}>
                         <TableCell align="left">{item.keys[0]}</TableCell>
+                        <TableCell align="right" sx={{ color: "red" }}>
+                          {item.numberShow}
+                        </TableCell>
                         <TableCell align="right" sx={{ color: "#1976d2" }}>
                           {item.clicks}
                         </TableCell>
