@@ -31,15 +31,6 @@ function ConfirmationDialogRaw(props) {
   const [pickStartDate, setPickStartDate] = useState(startDate);
   const [pickEndDate, setPickEndDate] = useState(endDate);
 
-  // let sd = startDate.getDate();
-  // let sm = startDate.getMonth() + 1;
-  // let sy = startDate.getFullYear();
-  // let ed = endDate.getDate();
-  // let em = endDate.getMonth() + 1;
-  // let ey = endDate.getFullYear();
-  // let textTime =
-  //   sd + " thg " + sm + ", " + sy + "-" + ed + " thg " + em + ", " + ey;
-
   useEffect(() => {
     if (!open) {
       setValue(value);
@@ -68,6 +59,12 @@ function ConfirmationDialogRaw(props) {
 
   const handleChange = (event) => {
     setValue(event.target.value);
+  };
+
+  const disableDate = (date) => {
+    let lastDay = new Date();
+    lastDay = lastDay.setDate(lastDay.getDate() - 1);
+    return date > lastDay;
   };
 
   return (
@@ -121,6 +118,7 @@ function ConfirmationDialogRaw(props) {
             <Box>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
+                  shouldDisableDate={disableDate}
                   disableHighlightToday
                   label="Ngày bắt đầu"
                   inputFormat="YYYY-MM-DD"
@@ -139,6 +137,7 @@ function ConfirmationDialogRaw(props) {
             <Box>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
+                  shouldDisableDate={disableDate}
                   disableHighlightToday
                   label="Ngày kết thúc"
                   inputFormat="YYYY-MM-DD"
@@ -188,7 +187,6 @@ const TimeFilter = ({ startDate, endDate, setStartDate, setEndDate }) => {
 
   const handleClose = (newValue) => {
     setOpen(false);
-
     if (newValue) {
       setText(newValue);
       let lastDay = new Date();

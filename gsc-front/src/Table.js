@@ -149,18 +149,18 @@ export default function EnhancedTable({ data }) {
                   .map((item, i) => {
                     return (
                       <TableRow key={i}>
-                        <TableCell align="left">{item["keys"][0]}</TableCell>
+                        <TableCell align="left">{item.keys[0]}</TableCell>
                         <TableCell align="right" sx={{ color: "#1976d2" }}>
-                          {item["clicks"]}
+                          {item.clicks}
                         </TableCell>
                         <TableCell align="right" sx={{ color: "#7b1fa2" }}>
-                          {item["impressions"]}
+                          {item.impressions}
                         </TableCell>
                         <TableCell align="right" sx={{ color: "#00796b" }}>
-                          {(item["ctr"] * 100).toFixed(1)}%
+                          {(parseFloat(item.ctr) * 100).toFixed(1)}%
                         </TableCell>
                         <TableCell align="right" sx={{ color: "#d56e0c" }}>
-                          {item["position"].toFixed(1)}
+                          {parseFloat(item.position).toFixed(1)}
                         </TableCell>
                       </TableRow>
                     );

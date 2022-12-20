@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import TimeFilter from "./timeFilter.js";
-import CsvDownload from "./csvDownload.js";
+import CsvDownload from "./download.js";
 import EnhancedTable from "./table.js";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
@@ -62,7 +62,7 @@ const App = () => {
     axios
       .post(
         (process.env.REACT_APP_ENDPOINT ??
-          "https://dashboard-api2.abc-elearning.org/") +
+          "http://localhost:8000/") +
           "gsc/get-report-search-console",
         {
           url: value,
@@ -98,7 +98,7 @@ const App = () => {
         handleChange={handleChange}
         value={value}
       />
-      <Box sx={{ display: "inline-flex", alignItems:"center", justifyContent:"space-between"}}>
+      <Box sx={{ display: "inline-flex", alignItems: "center" }}>
         <TimeFilter
           startDate={startDate}
           endDate={endDate}
