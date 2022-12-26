@@ -157,7 +157,7 @@ export default function EnhancedTable({ data }) {
                       <TableRow key={i}>
                         <TableCell align="left">{item.keys[0]}</TableCell>
                         <TableCell align="right" sx={{ color: "red" }}>
-                          {item.numberShow}
+                          {item.mentions}
                         </TableCell>
                         <TableCell align="right" sx={{ color: "#1976d2" }}>
                           {item.clicks}
