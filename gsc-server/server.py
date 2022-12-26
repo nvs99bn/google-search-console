@@ -70,8 +70,8 @@ def getGscData():
     text_content = soup.get_text().lower()
     for row in rows:
         key = row["keys"][0]
-        number_show = len(re.findall(key, text_content))
-        row["numberShow"] = number_show
+        mentions = len(re.findall(key, text_content))
+        row["mentions"] = mentions
     return jsonify(rows), 200
 
 if __name__ == "__main__":
