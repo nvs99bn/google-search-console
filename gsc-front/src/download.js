@@ -5,14 +5,24 @@ import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 const CsvDownload = ({ data }) => {
   const scvMaker = (data) => {
     let csvRows = [];
-    let fakeData = JSON.parse(JSON.stringify(data));
-    if (Array.isArray(fakeData) && fakeData.length > 0) {
-      const headers = Object.keys(fakeData[0]);
-      csvRows.push(headers.join(", "));
+    if (data && Array.isArray(data) && data?.length > 0) {
+      let formatData = JSON.parse(JSON.stringify(data))?.map((el) => {
+        return {
+            keys: el.keys,
+            mentions: el.mentions,
+            clicks: el.clicks,
+            impressions: el.impressions,
+            ctr: el.ctr,
+            position: el.position,
+        };
+      });
+      const headers = Object.keys(formatData[0]);
+      csvRows.push(headers.join(","));
       fakeData.forEach((item) => {
+      formatData.forEach((item) => {
         item.ctr = (parseFloat(item.ctr) * 100).toFixed(1) + "%";
         item.position = parseFloat(item.position).toFixed(1);
-        csvRows.push(Object.values(item).flat().join(", "));
+        csvRows.push(Object.values(item).flat().join(","));
       });
       return csvRows.join("\n");
     }
