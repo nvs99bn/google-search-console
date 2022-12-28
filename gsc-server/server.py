@@ -67,6 +67,8 @@ def getGscData():
         rows = []
     html_text = requests.get(url1).text
     soup = BeautifulSoup(html_text, 'html.parser')
+    for s in soup.select('head'):
+        s.extract()
     text_content = soup.get_text().lower()
     for row in rows:
         key = row["keys"][0]
